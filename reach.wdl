@@ -20,7 +20,7 @@ workflow reach {
 scatter ( bw in samples ) {
 
     scatter ( bed in bedFiles ) {
-    # identify list of cell barcodes with valid enriched library sequencing results
+    # Run deeptools compute matrix to extract data from bw at bed sites
         call computeMatrix {
             input:
             bedIn = bed,
@@ -28,10 +28,10 @@ scatter ( bw in samples ) {
             taskModule = deepToolsModule,
             threads = 4
         }
-        # run cell ranger count on the GEX library 
+        # Summarize the extracted data
         call summarize {
             input:
-            R1FastqsGEX = R1FastqsGEX,
+            computeMatrix_file = values_file,
             taskModule = pythonModule
         }
     }
@@ -40,15 +40,14 @@ scatter ( bw in samples ) {
 
 # Outputs that will be retained when execution is complete
 output {
-  File barcodes = barcodeConsensus.barcodeList
-  File cellrangerbam = cellRangerCount.bam
-  File cellrangerBai = cellRangerCount.bai
-  File cellrangerBarcodes = cellRangerCount.barcodes
+  File values_file = barcodeConsensus.barcodeList
+  File summary_file = cellRangerCount.bam
+  File Concat_summary = cellRangerCount.bai
 
   }
 }# End workflow
 
-#### TASK DEFINITIONS
+#### TASK ComputeMatrix
 task computeMatrix {
   input {
     File bedIn
@@ -56,9 +55,9 @@ task computeMatrix {
     String taskModule
     Int threads
   }
-  String stem = basename(bigwig, ".bw")
+  String bwstem = basename(bigwig, ".bw")
   String bedstem = basename(bedIn, ".bed")
-  String fileName = stem + "_with_" + bedstem
+  String fileName = bwstem + "_with_" + bedstem
 
   command {
       set -eo pipefail
@@ -73,19 +72,19 @@ task computeMatrix {
     cpu: threads
   }
   output {
-    File something = "~{fileName}.used.bed"
-    File somethingelse = "~{fileName}.values.tab"
+    File mtx_file = "~{fileName}.used.bed"
+    File values_file = "~{fileName}.values.tab"
   }
 }
 
 
-# annotate with annovar
+# Task summarize
 task summarize {
   input {
-    File input_vcf
+    File values_file
     String taskModule
   }
-  String base_vcf_name = basename(input_vcf, ".vcf.gz")
+  String fileName = bwstem + "_with_" + bedstem
   command {
   set -eo pipefail
 
@@ -96,8 +95,7 @@ task summarize {
 
   }
   output {
-    File annotatedVcf = "${base_vcf_name}.${ref_name}_multianno.vcf"
-    File annotatedTable = "${base_vcf_name}.${ref_name}_multianno.txt"
+    File summary_file = "{file_name}.summary.txt"
   }
   runtime {
     modules: taskModule
