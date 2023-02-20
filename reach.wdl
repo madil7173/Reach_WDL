@@ -47,7 +47,7 @@ output {
   }
 }# End workflow
 
-#### TASK ComputeMatrix
+#### TASK 1 ComputeMatrix
 task computeMatrix {
   input {
     File bedIn
@@ -60,12 +60,12 @@ task computeMatrix {
   String fileName = bwstem + "_with_" + bedstem
 
   command {
-      set -eo pipefail
+      set -eo pipefail #what does this line do?
       computeMatrix reference-point -R ~{bedIn} -S ~{bigwig} \
         -o ~{fileName}.mtx.gz -b 1005 -a 1005 -bs 15 \
         --referencePoint center -p=~{threads} \
         --outFileNameMatrix ~{fileName}.values.tab \
-        --outFileSortedRegions  ~{fileName}.used.bed"
+        --outFileSortedRegions  ~{fileName}.used.bed
   }
   runtime {
     modules: taskModule
@@ -78,7 +78,7 @@ task computeMatrix {
 }
 
 
-# Task summarize
+# Task 2 Summarize
 task summarize {
   input {
     File values_file
@@ -87,10 +87,9 @@ task summarize {
   String fileName = bwstem + "_with_" + bedstem
   command {
   set -eo pipefail
-
-  git clone <repo>
+  git clone git@github.com:madil7173/Reach_WDL.git ##is this correct?
   python Matrix_summary_generator.py --input ${file_name}.values.tab \
-     --out ${file_name}.summary.txt" >> ${bed_name}.slurm
+     --out ${file_name}.summary.txt 
 
 
   }
