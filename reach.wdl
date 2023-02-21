@@ -55,7 +55,7 @@ scatter ( combo in all_combinations ) {
         # Summarize the extracted data
         call summarize {
             input:
-            computeMatrix_file = computeMatrix.values_file,
+            values_file = computeMatrix.values_file,
             fileName = bwstem + "_with_" + bedstem,
             taskModule = pythonModule
         }
