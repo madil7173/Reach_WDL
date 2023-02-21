@@ -63,9 +63,9 @@ scatter ( combo in all_combinations ) {
 
 # Outputs that will be retained when execution is complete
 output {
-  Array[Array[File]] summary_results = summarize.summary_file
-  Array[Array[File]] mtx_results = computeMatrix.mtx_file
-  Array[Array[File]] values_results = computeMatrix.values_file
+  Array[File] summary_results = summarize.summary_file
+  Array[File] mtx_results = computeMatrix.mtx_file
+  Array[File] values_results = computeMatrix.values_file
   }
 }# End workflow
 
@@ -137,7 +137,7 @@ task summarize {
 
   git clone --branch "main" git@github.com:madil7173/Reach_WDL.git
 
-  python Matrix_summary_generator.py --input ~{fileName}.values.tab \
+  python Matrix_summary_generator.py --input ~{values_file} \
      --out ~{fileName}.summary.txt 
   }
   output {
