@@ -1,3 +1,0 @@
-sample:
-	#name: /path/to/file
-	test_file: /fh/scratch/delete90/haffner_m/user/madil/playground/test_bws/LHSAR_no_DHT.bw

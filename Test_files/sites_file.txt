@@ -1,0 +1,3 @@
+Sites:
+	#name: /path/to/file
+	test_file: /fh/scratch/delete90/haffner_m/user/madil/playground/test_bed/test.bed
