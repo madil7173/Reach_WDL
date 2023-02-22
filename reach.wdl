@@ -108,7 +108,7 @@ task sortBed {
     String taskModule
   }
 
-  String bedName = basename(bedIn, "bed")
+  String bedName = basename(bedIn, ".bed")
   command {
       set -eo pipefail 
       sortBed -i ~{bedIn} > ~{bedName}.sorted.bed
@@ -137,7 +137,7 @@ task summarize {
 
   git clone --branch "main" git@github.com:madil7173/Reach_WDL.git
 
-  python Matrix_summary_generator.py --input ~{values_file} \
+  python Reach_WDL/Matrix_summary_generator.py --input ~{values_file} \
      --out ~{fileName}.summary.txt 
   }
   output {
