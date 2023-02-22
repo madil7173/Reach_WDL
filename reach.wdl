@@ -72,7 +72,7 @@ output {
 
 ## Task defintions, usually in alphabetical order
 
-#### ComputeMatrix
+# Task 2 copute matrix for given bed and bw
 task computeMatrix {
   input {
     File bedIn
@@ -102,6 +102,7 @@ task computeMatrix {
   }
 }
 
+# Task 1 Sort bed file for copute matrix
 task sortBed {
   input {
     File bedIn
@@ -124,7 +125,7 @@ task sortBed {
 }
 
 
-# Task 2 Summarize
+# Task 3 Summarize
 task summarize {
   input {
     File values_file
