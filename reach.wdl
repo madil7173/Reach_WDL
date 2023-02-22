@@ -41,14 +41,15 @@ scatter ( combo in all_combinations ) {
 
       # Prep some filenames
       String bwstem = basename(bw, ".bw")
-      String bedstem = basename(bed, ".bed")
+      String bedstem = basename(bed, ".sorted.bed")
+      String fileStem = bwstem + "_with_" + bedstem
 
   #  to extract data from bw at bed sites
         call computeMatrix {
             input:
             bedIn = bed,
             bigwig = bw,
-            fileName = bwstem + "_with_" + bedstem,
+            fileName = fileStem,
             taskModule = deepToolsModule,
             threads = 4
         }
@@ -56,7 +57,7 @@ scatter ( combo in all_combinations ) {
         call summarize {
             input:
             values_file = computeMatrix.values_file,
-            fileName = bwstem + "_with_" + bedstem,
+            fileName = fileStem,
             taskModule = pythonModule
         }
     } # end scatter
