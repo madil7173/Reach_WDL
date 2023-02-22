@@ -1,0 +1,6 @@
+{
+    "final_workflow_outputs_dir": "/fh/scratch/delete90/haffner_m/user/madil/Methylation_profiles/cromwell_outputs/Results",
+    "use_relative_output_paths": false,
+    "final_workflow_log_dir": "/fh/scratch/delete90/haffner_m/user/madil/Methylation_profiles/cromwell_outputs/wf_logs",
+    "final_call_logs_dir": "/fh/scratch/delete90/haffner_m/user/madil/Methylation_profiles/cromwell_outputs/call_logs"
+}
