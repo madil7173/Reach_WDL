@@ -42,7 +42,7 @@ scatter ( combo in all_combinations ) {
       # Prep some filenames
       String bwstem = basename(bw, ".bw")
       String bedstem = basename(bed, ".sorted.bed")
-      String fileStem = bwstem + "_with_" + bedstem
+      String fileStem = bedstem + "_with_" + bwstem
 
   #  to extract data from bw at bed sites
         call computeMatrix {
