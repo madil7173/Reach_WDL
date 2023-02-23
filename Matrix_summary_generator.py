@@ -9,7 +9,8 @@ import argparse
 
 parser = argparse.ArgumentParser() 
 parser.add_argument('--input', help='/path/', required=True) 
-parser.add_argument('--out', help='Output matrix name', required=True) 
+parser.add_argument('--out', help='Output matrix name', required=True)
+
 args = parser.parse_args() 
 
 file_name = args.input

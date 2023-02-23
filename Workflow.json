@@ -1,5 +1,5 @@
 {
+    "read_from_cache": false,
     "final_workflow_outputs_dir": "/fh/scratch/delete90/haffner_m/user/madil/Methylation_profiles/cromwell_outputs/Results",
-    "use_relative_output_paths": false,
-    "read from cache": false
+    "use_relative_output_paths": false
 }
