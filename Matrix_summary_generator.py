@@ -1,7 +1,5 @@
 ##generate table summary
-#path = "/fh/scratch/delete90/haffner_m/user/madil/Methylation_profiles/Cell_lines/tmp/tmp/"
-#file_name = "ZMYND8.Prostate_hg19LO_10k_with_LNCaP.values.tab"
-#out_name = "test.values.metrics.txt"
+#
 
 import pandas as pd
 import numpy as np

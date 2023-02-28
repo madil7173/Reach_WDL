@@ -103,6 +103,35 @@ task computeMatrix {
   }
 }
 
+# Task 1 Group bed files
+## make list of beds to group together
+## Define group name for out file 
+## Provide beds in group as input to compute matrix
+
+task groupBeds {
+  input {
+    File bedIn
+    Int Group_n_beds
+    String taskModule
+  }
+
+command {
+      set -eo pipefail
+
+      git clone --branch "main" git@github.com:madil7173/Reach_WDL.git
+      python Reach_WDL/group_beds.py --Sites ~{bedIn} \
+        --Group_n ~{Group_n_beds}
+  }
+  runtime {
+    modules: taskModule
+    cpu: 1
+    memory: "2GB"
+  }
+  output {
+    File grouped_bedIn = "Group.json"
+  }
+}
+
 # Task 1 Sort bed file for copute matrix
 task sortBed {
   input {
