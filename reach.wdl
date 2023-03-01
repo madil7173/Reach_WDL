@@ -27,18 +27,15 @@ workflow reach {
   }
 
 scatter (each_sample in samples) {
-
-      File bw = each_sample
       bed = Array[File] sortBed.out
-
       # Prep some filenames
-      String bwstem = basename(bw, ".bw")
+      String bwstem = basename(each_sample, ".bw")
 
   #  to extract data from bw at bed sites
         call computeMatrix {
             input:
             bedIn = bed,
-            bigwig = bw,
+            bigwig = each_sample,
             fileName = bwstem,
             taskModule = deepToolsModule,
             threads = 4
@@ -66,7 +63,7 @@ output {
 # Task 2 copute matrix for given bed and bw
 task computeMatrix {
   input {
-    File bedIn
+    Array[File] bedIn
     File bigwig
     String taskModule
     String fileName
