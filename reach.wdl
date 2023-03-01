@@ -16,7 +16,8 @@ workflow reach {
     String bedtoolsModule = "BEDTools/2.30.0-GCC-11.2.0"
     String deepToolsModule = "deepTools/3.5.1-foss-2021b"
     String pythonModule = "Python/3.9.6-GCCcore-11.2.0"
-
+  
+  ## START WORKFLOW
   scatter (bedtosort in bedFiles) {
     call sortBed {
       input: 
@@ -25,24 +26,14 @@ workflow reach {
     }
   }
 
-  # This is a slightly "fancy" way to create all the combinations of two arrays and lets you parallellize over 
-  # a larger number of combinations with less complex workflow language.  This uses the array of sorted bed files as an input. 
-  Array[Pair[File, File]] all_combinations = cross( samples, sortBed.out )
+scatter (each_sample in samples) {
 
-  ## START WORKFLOW
-scatter ( combo in all_combinations ) {
-
-      # Since the combinations of all your bw's and bed's is an array of 'pairs' of files, since "samples"
-      # came first in the cross above, it is the "left" entry in each pair, while the sorted bedfiles was second
-      # so it's the "right" entry in each pair. You don't have to reassign them to variables like I'm doing
-      # here but I thought it's slightly easier to read this way.  
-      File bw = combo.left
-      File bed = combo.right
+      File bw = each_sample
+      Array[File] bedsToGroup
 
       # Prep some filenames
       String bwstem = basename(bw, ".bw")
-      String bedstem = basename(bed, ".sorted.bed")
-      String fileStem = bedstem + "_with_" + bwstem
+      String fileStem = bedstem 
 
   #  to extract data from bw at bed sites
         call computeMatrix {
@@ -103,39 +94,10 @@ task computeMatrix {
   }
 }
 
-# Task 1 Group bed files
-## make list of beds to group together
-## Define group name for out file 
-## Provide beds in group as input to compute matrix
-
-task groupBeds {
-  input {
-    File bedIn
-    Int Group_n_beds
-    String taskModule
-  }
-
-command {
-      set -eo pipefail
-
-      git clone --branch "main" git@github.com:madil7173/Reach_WDL.git
-      python Reach_WDL/group_beds.py --Sites ~{bedIn} \
-        --Group_n ~{Group_n_beds}
-  }
-  runtime {
-    modules: taskModule
-    cpu: 1
-    memory: "2GB"
-  }
-  output {
-    File grouped_bedIn = "Group.json"
-  }
-}
-
 # Task 1 Sort bed file for copute matrix
 task sortBed {
   input {
-    File bedIn
+    Array[File] bedsToGroup
     String taskModule
   }
 
