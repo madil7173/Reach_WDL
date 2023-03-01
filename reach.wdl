@@ -29,33 +29,32 @@ workflow reach {
 scatter (each_sample in samples) {
 
       File bw = each_sample
-      Array[File] bedsToGroup
+      bed = Array[File] sortBed.out
 
       # Prep some filenames
       String bwstem = basename(bw, ".bw")
-      String fileStem = bedstem 
 
   #  to extract data from bw at bed sites
         call computeMatrix {
             input:
             bedIn = bed,
             bigwig = bw,
-            fileName = fileStem,
+            fileName = bwstem,
             taskModule = deepToolsModule,
             threads = 4
         }
         # Summarize the extracted data
-        call summarize {
-            input:
-            values_file = computeMatrix.values_file,
-            fileName = fileStem,
-            taskModule = pythonModule
-        }
+        #call summarize {
+        #    input:
+        #    values_file = computeMatrix.values_file,
+        #    fileName = bwstem,
+        #    taskModule = pythonModule
+        #}
     } # end scatter
 
 # Outputs that will be retained when execution is complete
 output {
-  Array[File] summary_results = summarize.summary_file
+  #Array[File] summary_results = summarize.summary_file
   Array[File] mtx_results = computeMatrix.mtx_file
   Array[File] values_results = computeMatrix.values_file
   }
