@@ -5,11 +5,11 @@ import argparse
 
 parser = argparse.ArgumentParser() 
 parser.add_argument('--values_file', help='/path/to/values.tab', required=True) 
-parser.add_argument('--out_dir', help='/path/to/out_dir/', required=True)
+#parser.add_argument('--out_dir', help='/path/to/out_dir/', required=True)
 args = parser.parse_args() 
 
 file_path = args.values_file
-out_folder = args.out_dir
+#out_folder = args.out_dir
 
 values_file = pd.read_csv(file_path,sep = '\t',skiprows = 3,header = None)#nrows
 values_lines = pd.read_csv(file_path,sep = '\t',nrows = 1,header = None)#nrows
@@ -36,5 +36,6 @@ for each_bed in values_lines_list:
     current["metric"] = current.index
     current["site_name"] = each_bed[0].replace(".sorted.bed","")
     current["sample"] = sample_name
-    current.to_csv(out_folder + each_bed[0].replace(".sorted.bed","")+ "_with_" + sample_name.replace(".values.tab","") + ".values.summary.txt", sep = '\t',header = False,index = False) 
+    #current.to_csv(out_folder + each_bed[0].replace(".sorted.bed","")+ "_with_" + sample_name.replace(".values.tab","") + ".values.summary.txt", sep = '\t',header = False,index = False) 
+    current.to_csv(each_bed[0].replace(".sorted.bed","")+ "_with_" + sample_name.replace(".values.tab","") + ".values.summary.txt", sep = '\t',header = False,index = False) 
 print("Complete!")
