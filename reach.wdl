@@ -27,7 +27,7 @@ workflow reach {
   }
 
 scatter (each_sample in samples) {
-      bed = Array[File] sortBed.out
+      Array[File] bed = sortBed.out
       # Prep some filenames
       String bwstem = basename(each_sample, ".bw")
 
@@ -47,13 +47,19 @@ scatter (each_sample in samples) {
             fileName = bwstem,
             taskModule = pythonModule
         }
+        call gatherOutputs {
+            input:
+            tobeGathered = summarize.outs,
+            fileName = bwstem
+        }
     } # end scatter
 
 # Outputs that will be retained when execution is complete
 output {
   #Array[File] summary_results = summarize.summary_file
-  Array[File] mtx_results = computeMatrix.mtx_file
-  Array[File] values_results = computeMatrix.values_file
+  #Array[File] mtx_results = computeMatrix.mtx_file
+  #Array[File] values_results = computeMatrix.values_file
+  Array[File] reach_results = gatherOutputs.result
   }
 }# End workflow
 
@@ -73,7 +79,7 @@ task computeMatrix {
   command {
       set -eo pipefail 
 
-      computeMatrix reference-point -R ~{bedIn} -S ~{bigwig} \
+      computeMatrix reference-point -R ~{sep=" " bedIn} -S ~{bigwig} \
         -o ~{fileName}.mtx.gz -b 1005 -a 1005 -bs 15 \
         --referencePoint center -p=~{threads} \
         --outFileNameMatrix ~{fileName}.values.tab \
@@ -130,10 +136,32 @@ task summarize {
 
   }
   output {
-    File summary_file = "~{fileName}.summary.txt"
+    Array[File] outs = glob("*.summary.txt")
   }
   runtime {
     modules: taskModule
+    cpu: 1
+    memory: "2GB"
+  }
+}
+
+task gatherOutputs {
+  input {
+    Array[File] tobeGathered
+    String fileName
+    String taskModule
+  }
+
+  command {
+  set -eo pipefail
+
+  cat ~{sep=" " tobeGathered} > ~{fileName}.gathered.data.out
+
+  }
+  output {
+    File result = "~{fileName}.gathered.data.out"
+  }
+  runtime {
     cpu: 1
     memory: "2GB"
   }
