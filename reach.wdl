@@ -126,8 +126,8 @@ task summarize {
 
   git clone --branch "main" git@github.com:madil7173/Reach_WDL.git
 
-  python Reach_WDL/Matrix_summary_generator.py --input ~{values_file} \
-     --out ~{fileName}.summary.txt 
+  python Reach_WDL/MultiBed_Matrix_summary_generator.py --values_file ~{values_file}
+  
   }
   output {
     File summary_file = "~{fileName}.summary.txt"
