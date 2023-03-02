@@ -41,12 +41,12 @@ scatter (each_sample in samples) {
             threads = 4
         }
         # Summarize the extracted data
-        #call summarize {
-        #    input:
-        #    values_file = computeMatrix.values_file,
-        #    fileName = bwstem,
-        #    taskModule = pythonModule
-        #}
+        call summarize {
+            input:
+            values_file = computeMatrix.values_file,
+            fileName = bwstem,
+            taskModule = pythonModule
+        }
     } # end scatter
 
 # Outputs that will be retained when execution is complete
@@ -127,7 +127,7 @@ task summarize {
   git clone --branch "main" git@github.com:madil7173/Reach_WDL.git
 
   python Reach_WDL/MultiBed_Matrix_summary_generator.py --values_file ~{values_file}
-  
+
   }
   output {
     File summary_file = "~{fileName}.summary.txt"
